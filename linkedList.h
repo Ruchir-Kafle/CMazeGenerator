@@ -34,6 +34,25 @@ void printLinkedList(Node *head) {
     }
 }
 
+bool isHead(Node *element) {
+    // if the element has a previous node, it can't be the head, so check for
+    // that
+    if (element->previousNode == NULL) {
+        return true;
+    }
+
+    return false;
+}
+
+bool isTail(Node *element) {
+    // if the element has a next node, it can't be the tail, so check for that
+    if (element->nextNode == NULL) {
+        return true;
+    }
+
+    return false;
+}
+
 Node *findHead(Node *element) {
     // new iteration var so not to change og argument
     Node *iterateElement = element;

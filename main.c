@@ -48,6 +48,8 @@ Node *generateMazeTemplate() {
     Node *iterate = firstRow;
     LinkedListConfig columnsConfig = {.size = MAZE_COLUMNS};
 
+    // first row should all be walls
+    bool shouldBeWall = true;
     // for each node in the linked list, set its data to another linked list
     // outer linked list = rows
     // each inner linked list = columns
@@ -66,8 +68,19 @@ Node *generateMazeTemplate() {
                 exit(1);
             }
 
+            // check if the tile should be a wall and set its value
+            if (shouldBeWall) {
+                tile->data = 1;
+            } else {
+                tile->data = 0;
+            }
+
             // set the inner list's data to be a MazeTile
             innerIterate->data = tile;
+        }
+
+        if (shouldBeWall) {
+            shouldBeWall = !shouldBeWall;
         }
     }
 
