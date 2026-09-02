@@ -35,11 +35,29 @@ typedef struct {
 } MazeConfig;
 
 // generate maze template
-void generateMazeTemplate(int maze[][MAZE_COLUMNS]) {
+Node *generateMazeTemplate() {
+    // create linked list for maze
+    // creates the config, indicating that this linked list should contain the
+    // number of rows dictated by MAZE_ROWS
+    LinkedListConfig rowsConfig = {.size = MAZE_ROWS};
+    // create the linked list of rows, with the first row, the head of this
+    // doubly linked list being returned
+    Node *firstRow = initDoublyLinkedList(rowsConfig);
 
-    // init array w/ MAZE_ROWS rows and MAZE_COLUMNS columns
-    for (int i = 0; i < MAZE_ROWS; i++) {
-        for (int j = 0; j < MAZE_COLUMNS; j++) {
+    // setting up columns w/ iteration and config
+    Node *iterate = firstRow;
+    LinkedListConfig columnsConfig = {.size = MAZE_COLUMNS};
+
+    // for each node in the linked list, set its data to another linked list
+    // outer linked list = rows
+    // each inner linked list = columns
+    while (iterate->nextNode != NULL) {
+        iterate->data = initDoublyLinkedList(columnsConfig);
+
+        // second loop to loop through inner linked lists and assign each data
+        // attribute a tile struct
+        Node *innerIterate = iterate->data;
+        while (innerIterate->nextNode != NULL) {
             // instantiate new MazeTile for each tile
             MazeTile *tile = malloc(sizeof(MazeTile));
 
@@ -48,15 +66,12 @@ void generateMazeTemplate(int maze[][MAZE_COLUMNS]) {
                 exit(1);
             }
 
-            // if edge, place wall; else empty
-            if (i == MAZE_ROWS - 1 || j == MAZE_COLUMNS - 1 || i == 0 ||
-                j == 0) {
-                tile->value = 1;
-            } else {
-                tile->value = 0;
-            }
+            // set the inner list's data to be a MazeTile
+            innerIterate->data = tile;
         }
     }
+
+    return firstRow;
 }
 
 // generate maze paths from the entrance out
@@ -96,11 +111,9 @@ void printMaze(int maze[][MAZE_COLUMNS]) {
 
 // temp main for debugging maze logic
 int main() {
+    generateMazeTemplate();
 
-    int maze[MAZE_ROWS][MAZE_COLUMNS];
-    generateMazeTemplate(maze);
-
-    printMaze(maze);
+    printMaze();
 
     return 0;
 }

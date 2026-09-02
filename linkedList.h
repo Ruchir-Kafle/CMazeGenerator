@@ -11,7 +11,7 @@ struct Node {
     Node *previousNode;
     Node *nextNode;
 
-    void *value;
+    void *data;
 };
 
 // linked list options
@@ -19,18 +19,56 @@ typedef struct {
     int size;
 } LinkedListConfig;
 
-// optional value to pass in to a node during instantiation
+// optional data to pass in to a node during instantiation
 typedef struct {
-    void *value;
+    void *data;
 } NodeConfig;
+
+void printLinkedList(Node *head) {
+    Node *next = head;
+
+    printf(next->data->data);
+    while (next->nextNode != NULL) {
+        next = next->nextNode;
+        printf(next->data->data);
+    }
+}
+
+Node *findHead(Node *element) {
+    // new iteration var so not to change og argument
+    Node *iterateElement = element;
+
+    // loop until iterateElement no longer has a previous node, which means it
+    // is the head
+    while (iterateElement->previousNode != NULL) {
+        iterateElement = iterateElement->previousNode;
+    }
+
+    // return the final iterateElement
+    return iterateElement;
+}
+
+Node *findTail(Node *element) {
+    // new iteration var so not to change og argument
+    Node *iterateElement = element;
+
+    // loop until iterateElement no longer has a next node, which means it is
+    // the tail
+    while (iterateElement->nextNode != NULL) {
+        iterateElement = iterateElement->nextNode;
+    }
+
+    // return the final iterateElement
+    return iterateElement;
+}
 
 Node *initSingleNode(NodeConfig *config) {
     void *configValue;
 
-    // check if given a config value for the value the node should be given
+    // check if given a config data for the data the node should be given
     // during instantiation
     if (config != NULL) {
-        configValue = config->value ? config->value : NULL;
+        configValue = config->data ? config->data : NULL;
     } else {
         configValue = NULL;
     }
@@ -44,7 +82,7 @@ Node *initSingleNode(NodeConfig *config) {
         exit(1);
     }
 
-    newNode->value = configValue;
+    newNode->data = configValue;
     return newNode;
 }
 
