@@ -27,10 +27,10 @@ typedef struct {
 void printLinkedList(Node *head) {
     Node *next = head;
 
-    printf(next->data->data);
+    printf(next->data);
     while (next->nextNode != NULL) {
         next = next->nextNode;
-        printf(next->data->data);
+        printf(next->data);
     }
 }
 
@@ -59,7 +59,7 @@ Node *findHead(Node *element) {
 
     // loop until iterateElement no longer has a previous node, which means it
     // is the head
-    while (iterateElement->previousNode != NULL) {
+    while (!isHead(iterateElement)) {
         iterateElement = iterateElement->previousNode;
     }
 
@@ -73,7 +73,7 @@ Node *findTail(Node *element) {
 
     // loop until iterateElement no longer has a next node, which means it is
     // the tail
-    while (iterateElement->nextNode != NULL) {
+    while (!isTail(iterateElement)) {
         iterateElement = iterateElement->nextNode;
     }
 
@@ -135,21 +135,15 @@ Node *initDoublyLinkedList(LinkedListConfig *config) {
             head->previousNode = NULL;
             head->nextNode = NULL;
         } else {
-            // setting up a var outside of the while loop for list traversal
-            Node *next = head;
-
-            // if the current node's next node is not NULL, that means we have
-            // not yet reached the tail, so we must keep setting the current
-            // node to the next node until we have found the last node
-            while (next->nextNode != NULL) {
-                next = next->nextNode;
-            }
+            // find the tail of the linked list to add on to
+            Node *tail = findTail(head);
 
             // when we have found the tail, we set that node to have a nextNode
             // and our new node to have a previousNode, meaning it is no longer
             // the tail
-            element->previousNode = next;
-            next->nextNode = element;
+            element->previousNode = tail;
+            element->nextNode = NULL;
+            tail->nextNode = element;
         }
     }
 

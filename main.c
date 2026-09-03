@@ -19,7 +19,7 @@ typedef struct MazeTile MazeTile;
 
 // MazeTile properties, value of a single node of a row
 struct MazeTile {
-    int value;
+    int data;
     MazeTile *right;
     MazeTile *left;
     MazeTile *up;
@@ -42,24 +42,31 @@ Node *generateMazeTemplate() {
     LinkedListConfig rowsConfig = {.size = MAZE_ROWS};
     // create the linked list of rows, with the first row, the head of this
     // doubly linked list being returned
-    Node *firstRow = initDoublyLinkedList(rowsConfig);
+    Node *firstRow = initDoublyLinkedList(&rowsConfig);
 
     // setting up columns w/ iteration and config
-    Node *iterate = firstRow;
+    Node *rowNode = firstRow;
     LinkedListConfig columnsConfig = {.size = MAZE_COLUMNS};
 
-    // first row should all be walls
-    bool shouldBeWall = true;
+    // this bool lets us set a bunch of walls if the first or last row is set
+    bool shouldBeWall;
     // for each node in the linked list, set its data to another linked list
     // outer linked list = rows
     // each inner linked list = columns
-    while (iterate->nextNode != NULL) {
-        iterate->data = initDoublyLinkedList(columnsConfig);
+    while (rowNode->nextNode != NULL) {
+        rowNode->data = initDoublyLinkedList(&columnsConfig);
+        // check if the row is the first or last, in which case all created
+        // tiles should be walls
+        if (isHead(rowNode) || isTail(rowNode)) {
+            shouldBeWall = true;
+        } else {
+            shouldBeWall = false;
+        }
 
         // second loop to loop through inner linked lists and assign each data
         // attribute a tile struct
-        Node *innerIterate = iterate->data;
-        while (innerIterate->nextNode != NULL) {
+        Node *columnNode = rowNode->data;
+        while (columnNode->nextNode != NULL) {
             // instantiate new MazeTile for each tile
             MazeTile *tile = malloc(sizeof(MazeTile));
 
@@ -69,19 +76,23 @@ Node *generateMazeTemplate() {
             }
 
             // check if the tile should be a wall and set its value
-            if (shouldBeWall) {
+            // plus check if the current node in the iteration is the first or
+            // last, in which case it should be a wall
+            if (shouldBeWall || isTail(columnNode) || isHead(columnNode)) {
                 tile->data = 1;
             } else {
                 tile->data = 0;
             }
 
             // set the inner list's data to be a MazeTile
-            innerIterate->data = tile;
+            columnNode->data = tile;
+
+            // go to the next node
+            columnNode = columnNode->nextNode;
         }
 
-        if (shouldBeWall) {
-            shouldBeWall = !shouldBeWall;
-        }
+        // go to the next row
+        rowNode = rowNode->nextNode;
     }
 
     return firstRow;
@@ -124,9 +135,8 @@ void printMaze(int maze[][MAZE_COLUMNS]) {
 
 // temp main for debugging maze logic
 int main() {
-    generateMazeTemplate();
-
-    printMaze();
+    Node *maze = generateMazeTemplate();
+    printLinkedList(maze);
 
     return 0;
 }
