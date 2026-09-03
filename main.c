@@ -53,7 +53,7 @@ Node *generateMazeTemplate() {
     // for each node in the linked list, set its data to another linked list
     // outer linked list = rows
     // each inner linked list = columns
-    while (rowNode->nextNode != NULL) {
+    while (rowNode != NULL) {
         rowNode->data = initDoublyLinkedList(&columnsConfig);
         // check if the row is the first or last, in which case all created
         // tiles should be walls
@@ -66,7 +66,7 @@ Node *generateMazeTemplate() {
         // second loop to loop through inner linked lists and assign each data
         // attribute a tile struct
         Node *columnNode = rowNode->data;
-        while (columnNode->nextNode != NULL) {
+        while (columnNode != NULL) {
             // instantiate new MazeTile for each tile
             MazeTile *tile = malloc(sizeof(MazeTile));
 
@@ -123,20 +123,31 @@ void generatePaths(int maze[][MAZE_COLUMNS], MazeConfig *config) {
     }
 }
 
-void printMaze(int maze[][MAZE_COLUMNS]) {
-    for (int i = 0; i < MAZE_ROWS; i++) {
-        printf("[");
-        for (int j = 0; j < MAZE_COLUMNS; j++) {
-            printf(" %d", maze[i][j]);
+void printMaze(Node *head) {
+    if (!isHead(head)) {
+        printf("Not linked list head.");
+        return;
+    }
+
+    Node *row = head;
+    while (row != NULL) {
+        Node *column = (Node *)row->data;
+
+        while (column != NULL) {
+            printf(" %d", ((MazeTile *)column->data)->data);
+            column = column->nextNode;
         }
-        printf(" ]\n");
+
+        printf("\n");
+        row = row->nextNode;
     }
 }
 
-// temp main for debugging maze logic
+// temp main for deb;ugging maze logic
 int main() {
     Node *maze = generateMazeTemplate();
-    printLinkedList(maze);
+
+    printMaze(maze);
 
     return 0;
 }

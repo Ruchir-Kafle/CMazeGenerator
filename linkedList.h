@@ -24,16 +24,6 @@ typedef struct {
     void *data;
 } NodeConfig;
 
-void printLinkedList(Node *head) {
-    Node *next = head;
-
-    printf(next->data);
-    while (next->nextNode != NULL) {
-        next = next->nextNode;
-        printf(next->data);
-    }
-}
-
 bool isHead(Node *element) {
     // if the element has a previous node, it can't be the head, so check for
     // that
