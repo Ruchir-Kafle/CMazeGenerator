@@ -8,6 +8,7 @@ typedef struct Node Node;
 
 // linked list node
 struct Node {
+    int index;
     Node *previousNode;
     Node *nextNode;
 
@@ -117,6 +118,7 @@ Node *initDoublyLinkedList(LinkedListConfig *config) {
     // create a new node for each node wished for
     for (int i = 0; i < size; i++) {
         Node *element = initSingleNode(NULL);
+        element->index = i;
 
         // if first iteration, set node to head, which always has previousNode
         // to NULL

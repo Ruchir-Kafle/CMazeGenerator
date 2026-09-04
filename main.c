@@ -97,6 +97,27 @@ Node *generateMazeTemplate() {
 
     return firstRow;
 }
+void linkMazeTiles(Node *mazeHead) {
+    // check if maze head is not provided
+    if (mazeHead == NULL || !isHead(mazeHead)) {
+        printf("Maze head not provided");
+        return;
+    }
+
+    // loop through rows and loop through columns
+    // on each column, check if it is head or tail
+    // if head, set left to NULL and right to nextNode,
+    // if tail, set right to NULL and left to previousNode,
+    // else set left to previousNode and right to nextNode
+    // check if row is head or tail
+    // if head, set up to NULL and down to as stated below,
+    // if tail set down to NULL and up to as stated below,
+    // else go to the row previousNode, look for the column with the same index,
+    // and set up to that
+    // then go to the row nextNode, look for the column with the same index, and
+    // set down to that tile
+    Node *nextNode = mazeHead;
+}
 
 // generate maze paths from the entrance out
 void generatePaths(int maze[][MAZE_COLUMNS], MazeConfig *config) {
@@ -124,11 +145,14 @@ void generatePaths(int maze[][MAZE_COLUMNS], MazeConfig *config) {
 }
 
 void printMaze(Node *head) {
+    // printing the maze requires the head of the linked list, otherwise adds
+    // more complexity
     if (!isHead(head)) {
         printf("Not linked list head.");
         return;
     }
 
+    // creating an iteration variable for the rows
     Node *row = head;
     while (row != NULL) {
         Node *column = (Node *)row->data;
