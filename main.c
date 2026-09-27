@@ -105,6 +105,23 @@ void linkMazeTiles(Node *mazeHead) {
     }
 
     // loop through rows and loop through columns
+    Node *row = mazeHead;
+
+    while (row != NULL) {
+        Node *column = (Node *)row->data;
+
+        while (column != NULL) {
+
+            if (isHead(column)) {
+                ((MazeTile *)column->data)->data;
+            } else if (isTail(column)) {
+            }
+
+            column = column->nextNode;
+        }
+
+        row = row->nextNode;
+    }
     // on each column, check if it is head or tail
     // if head, set left to NULL and right to nextNode,
     // if tail, set right to NULL and left to previousNode,
@@ -116,7 +133,6 @@ void linkMazeTiles(Node *mazeHead) {
     // and set up to that
     // then go to the row nextNode, look for the column with the same index, and
     // set down to that tile
-    Node *nextNode = mazeHead;
 }
 
 // generate maze paths from the entrance out
