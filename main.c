@@ -111,10 +111,21 @@ void linkMazeTiles(Node *mazeHead) {
         Node *column = (Node *)row->data;
 
         while (column != NULL) {
+            MazeTile *workingMazeTile = (MazeTile *)column->data;
 
+            // on each column, check if it is head or tail
             if (isHead(column)) {
-                ((MazeTile *)column->data)->data;
+                // if head, set left to NULL and right to the nextNode's MazeTile,
+                workingMazeTile->left = NULL;
+                workingMazeTile->right = column->nextNode ? (MazeTile *)column->nextNode->data : NULL;
             } else if (isTail(column)) {
+                // if tail, set right to NULL and left to previousNode,
+                workingMazeTile->left = column->previousNode ? (MazeTile *)column->previousNode->data : NULL;
+                workingMazeTile->right = NULL;
+            } else {
+                // else set left to previousNode and right to nextNode
+                workingMazeTile->left = column->previousNode ? (MazeTile *)column->previousNode->data : NULL;
+                workingMazeTile->right = column->nextNode ? (MazeTile *)column->nextNode->data : NULL;
             }
 
             column = column->nextNode;
@@ -122,10 +133,6 @@ void linkMazeTiles(Node *mazeHead) {
 
         row = row->nextNode;
     }
-    // on each column, check if it is head or tail
-    // if head, set left to NULL and right to nextNode,
-    // if tail, set right to NULL and left to previousNode,
-    // else set left to previousNode and right to nextNode
     // check if row is head or tail
     // if head, set up to NULL and down to as stated below,
     // if tail set down to NULL and up to as stated below,
