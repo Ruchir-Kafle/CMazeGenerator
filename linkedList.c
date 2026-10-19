@@ -7,6 +7,10 @@
 bool isHead(Node *element) {
     // if the element has a previous node, it can't be the head, so check for
     // that
+    if (element == NULL) {
+        return NULL;
+    }
+
     if (element->previousNode == NULL) {
         return true;
     }
@@ -16,6 +20,10 @@ bool isHead(Node *element) {
 
 bool isTail(Node *element) {
     // if the element has a next node, it can't be the tail, so check for that
+    if (element == NULL) {
+        return NULL;
+    }
+
     if (element->nextNode == NULL) {
         return true;
     }
@@ -24,6 +32,9 @@ bool isTail(Node *element) {
 }
 
 Node *findHead(Node *element) {
+    if (element == NULL) {
+        return NULL;
+    }
     // new iteration var so not to change og argument
     Node *iterateElement = element;
 
@@ -38,6 +49,9 @@ Node *findHead(Node *element) {
 }
 
 Node *findTail(Node *element) {
+    if (element == NULL) {
+        return NULL;
+    }
     // new iteration var so not to change og argument
     Node *iterateElement = element;
 
@@ -48,6 +62,44 @@ Node *findTail(Node *element) {
     }
 
     // return the final iterateElement
+    return iterateElement;
+}
+
+Node *correspondingElementInPreviousRow(Node *parent, Node *element) {
+    // function to find the linked list element with the same index as the given one, but in the prev row
+    if (element == NULL) {
+        return NULL;
+    }
+
+    Node *iterateElement = parent->previousNode->data;
+
+    while (iterateElement->index != element->index) {
+        if (iterateElement->nextNode == NULL) {
+            return NULL;
+        }
+
+        iterateElement = iterateElement->nextNode;
+    }
+
+    return iterateElement;
+}
+
+Node *correspondingElementInNextRow(Node *parent, Node *element) {
+    // function to find the linked list element with the same index as the given one, but in the next row
+    if (element == NULL) {
+        return NULL;
+    }
+
+    Node *iterateElement = parent->nextNode->data;
+
+    while (iterateElement->index != element->index) {
+        if (iterateElement->nextNode == NULL) {
+            return NULL;
+        }
+
+        iterateElement = iterateElement->nextNode;
+    }
+
     return iterateElement;
 }
 
