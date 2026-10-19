@@ -113,33 +113,19 @@ void linkMazeTiles(Node *mazeHead) {
         while (column != NULL) {
             MazeTile *workingMazeTile = (MazeTile *)column->data;
 
-            // on each column, check if it is head or tail
-            if (isHead(column)) {
-                // if head, set left to NULL and right to the nextNode's MazeTile,
-                workingMazeTile->left = NULL;
-                workingMazeTile->right = column->nextNode ? (MazeTile *)column->nextNode->data : NULL;
-            } else if (isTail(column)) {
-                // if tail, set right to NULL and left to previousNode,
-                workingMazeTile->left = column->previousNode ? (MazeTile *)column->previousNode->data : NULL;
-                workingMazeTile->right = NULL;
-            } else {
-                // else set left to previousNode and right to nextNode
-                workingMazeTile->left = column->previousNode ? (MazeTile *)column->previousNode->data : NULL;
-                workingMazeTile->right = column->nextNode ? (MazeTile *)column->nextNode->data : NULL;
-            }
+            workingMazeTile->left = column->previousNode ? (MazeTile *)column->previousNode->data : NULL;
+            workingMazeTile->right = column->nextNode ? (MazeTile *)column->nextNode->data : NULL;
+
+
+            workingMazeTile->up = row->previousNode ? (MazeTile *)correspondingElementInPreviousRow(row, column) : NULL;
+            workingMazeTile->down = row->nextNode ? (MazeTile *)correspondingElementInNextRow(row, column): NULL;
+
 
             column = column->nextNode;
         }
 
         row = row->nextNode;
     }
-    // check if row is head or tail
-    // if head, set up to NULL and down to as stated below,
-    // if tail set down to NULL and up to as stated below,
-    // else go to the row previousNode, look for the column with the same index,
-    // and set up to that
-    // then go to the row nextNode, look for the column with the same index, and
-    // set down to that tile
 }
 
 // generate maze paths from the entrance out
