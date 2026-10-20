@@ -1,4 +1,8 @@
+CC = gcc
+CFLAGS = -g 
+RAYLIB_FLAGS = -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+FILES = main.c linkedList.c
 
 default:
-	gcc -g main.c -o main -lraylib -lGL -lm -lpthread -ldl -lrt -lX11
+	$(CC) $(CFLAGS) $(FILES) -o main $(RAYLIB_FLAGS)
 

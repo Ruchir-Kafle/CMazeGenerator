@@ -116,20 +116,18 @@ void linkMazeTiles(Node *mazeHead) {
             workingMazeTile->left = column->previousNode ? (MazeTile *)column->previousNode->data : NULL;
             workingMazeTile->right = column->nextNode ? (MazeTile *)column->nextNode->data : NULL;
 
-
-            workingMazeTile->up = row->previousNode ? (MazeTile *)correspondingElementInPreviousRow(row, column) : NULL;
-            workingMazeTile->down = row->nextNode ? (MazeTile *)correspondingElementInNextRow(row, column): NULL;
-
+            workingMazeTile->up = row->previousNode ? (MazeTile *)correspondingElementInPreviousRow(row, column)->data : NULL;
+            workingMazeTile->down = row->nextNode ? (MazeTile *)correspondingElementInNextRow(row, column)->data : NULL;
 
             column = column->nextNode;
         }
 
         row = row->nextNode;
     }
-}
+}          
 
 // generate maze paths from the entrance out
-void generatePaths(int maze[][MAZE_COLUMNS], MazeConfig *config) {
+void generatePaths(Node *mazeHead, MazeConfig *config) {
 
     // checking if the user provided the optional params: maze entrance and exit
     int maze_entrance_tile = config->maze_entrance ? config->maze_entrance : -1;
@@ -138,18 +136,13 @@ void generatePaths(int maze[][MAZE_COLUMNS], MazeConfig *config) {
     // if maze_entrance_tile was provided, set that tile to entrance; else
     // mid-tile is entrance
     if (maze_entrance_tile != -1) {
-        maze[MAZE_ROWS - 1][maze_entrance_tile] = 3;
     } else {
         // approximately in the middle, for odd sized mazes, take half then
         // round down
-        maze[MAZE_ROWS - 1][(int)((MAZE_COLUMNS - 1) / 2)] = 3;
     }
-
     // same for maze_exit_tile as maze_entrance_tile
     if (maze_exit_tile != -1) {
-        maze[MAZE_ROWS - 1][maze_exit_tile] = 3;
     } else {
-        maze[MAZE_ROWS - 1][(int)((MAZE_COLUMNS - 1) / 2)] = 3;
     }
 }
 
@@ -179,6 +172,7 @@ void printMaze(Node *head) {
 // temp main for deb;ugging maze logic
 int main() {
     Node *maze = generateMazeTemplate();
+    linkMazeTiles(maze);
 
     printMaze(maze);
 
