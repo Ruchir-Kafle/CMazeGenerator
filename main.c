@@ -17,6 +17,8 @@
 #define HORIZONTAL_PADDING 400
 #define VERTICAL_PADDING (HORIZONTAL_PADDING / 2)
 
+#define TILE_DIMENSIONS 60
+
 // forward declaration
 typedef struct MazeTile MazeTile;
 
@@ -176,7 +178,7 @@ void printMaze(Node *head) {
 void raylib_main(Node *mazeHead) {
 
     // initialize window
-    InitWindow(MAZE_COLUMNS * 60 + HORIZONTAL_PADDING, MAZE_ROWS * 60 + VERTICAL_PADDING, "Maze");
+    InitWindow(MAZE_COLUMNS * TILE_DIMENSIONS + HORIZONTAL_PADDING, MAZE_ROWS * TILE_DIMENSIONS + VERTICAL_PADDING, "Maze");
 
     // main game loop
     while (!WindowShouldClose()) {
@@ -186,8 +188,19 @@ void raylib_main(Node *mazeHead) {
             // all drawing should happen below
             ClearBackground(SKYBLUE);
             
-            
+            int halfXPadding = HORIZONTAL_PADDING / 2;
+            int halfYPadding = VERTICAL_PADDING / 2;
 
+            for (int i = 0; i < MAZE_ROWS; i++) {
+                for (int j = 0; j < MAZE_COLUMNS; j++) {
+                    DrawRectangle(halfXPadding + i * TILE_DIMENSIONS, 
+                                  halfYPadding + j * TILE_DIMENSIONS, 
+                                  TILE_DIMENSIONS, 
+                                  TILE_DIMENSIONS, 
+                                  WHITE);
+                }
+            }
+ 
 
 
         // end loop, stop drawing
@@ -204,6 +217,8 @@ int main() {
     linkMazeTiles(maze);
 
     printMaze(maze);
+
+    raylib_main(maze);
 
     return 0;
 }
