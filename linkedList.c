@@ -103,6 +103,23 @@ Node *correspondingElementInNextRow(Node *parent, Node *element) {
     return iterateElement;
 }
 
+Node *searchByIndex(Node *head, int index) {
+    if (head == NULL || !isHead(head)) {
+        return NULL;
+    }
+
+    Node *iterateElement = head;
+
+    while (iterateElement->index != index) {
+        iterateElement = iterateElement->nextNode;
+        if (isTail(iterateElement)) {
+            return NULL;
+        }
+    }
+
+    return iterateElement;
+}
+
 Node *initSingleNode(NodeConfig *config) {
     void *configValue;
 

@@ -31,5 +31,6 @@ Node *initSingleNode(NodeConfig *config);
 Node *initDoublyLinkedList(LinkedListConfig *config);
 Node *correspondingElementInPreviousRow(Node *parent, Node *element);
 Node *correspondingElementInNextRow(Node *parent, Node *element);
+Node *searchByIndex(Node *head, int index);
 
 #endif

@@ -14,6 +14,9 @@
 #define MAZE_ROWS 10
 #define MAZE_COLUMNS 10
 
+#define HORIZONTAL_PADDING 400
+#define VERTICAL_PADDING (HORIZONTAL_PADDING / 2)
+
 // forward declaration
 typedef struct MazeTile MazeTile;
 
@@ -169,6 +172,32 @@ void printMaze(Node *head) {
     }
 }
 
+// raylib code for displaying stuff
+void raylib_main(Node *mazeHead) {
+
+    // initialize window
+    InitWindow(MAZE_COLUMNS * 60 + HORIZONTAL_PADDING, MAZE_ROWS * 60 + VERTICAL_PADDING, "Maze");
+
+    // main game loop
+    while (!WindowShouldClose()) {
+        // begin loop, start drawing
+        BeginDrawing();
+
+            // all drawing should happen below
+            ClearBackground(SKYBLUE);
+            
+            
+
+
+
+        // end loop, stop drawing
+        EndDrawing();
+    }
+
+    // close the window
+    CloseWindow();
+}
+
 // temp main for deb;ugging maze logic
 int main() {
     Node *maze = generateMazeTemplate();
@@ -179,27 +208,3 @@ int main() {
     return 0;
 }
 
-// raylib code for displaying stuff
-int raylib_main() {
-
-    // initialize window
-    InitWindow(600, 400, "Maze");
-
-    // main game loop
-    while (!WindowShouldClose()) {
-        // begin loop, start drawing
-        BeginDrawing();
-
-        // all drawing should happen below
-
-        ClearBackground(SKYBLUE);
-
-        // end loop, stop drawing
-        EndDrawing();
-    }
-
-    // close the window
-    CloseWindow();
-
-    return 0;
-}
