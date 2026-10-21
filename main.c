@@ -31,6 +31,11 @@ struct MazeTile {
     MazeTile *down;
 };
 
+typedef enum {
+    EMPTY,
+    WALL
+} COLORS;
+
 // config structs
 
 // maze to allow optional inputs for pathing
@@ -84,9 +89,9 @@ Node *generateMazeTemplate() {
             // plus check if the current node in the iteration is the first or
             // last, in which case it should be a wall
             if (shouldBeWall || isTail(columnNode) || isHead(columnNode)) {
-                tile->data = 1;
+                tile->data = WALL;
             } else {
-                tile->data = 0;
+                tile->data = EMPTY;
             }
 
             // set the inner list's data to be a MazeTile
@@ -193,11 +198,35 @@ void raylib_main(Node *mazeHead) {
 
             for (int i = 0; i < MAZE_ROWS; i++) {
                 for (int j = 0; j < MAZE_COLUMNS; j++) {
+                    Color color;
+
+                    Node *row = searchByIndex(mazeHead, i);
+                    if (row == NULL) {
+                        fprintf(stderr, "NULL row at (%d, %d)\n", i, j);
+                        exit(EXIT_FAILURE);
+                    }
+
+                    Node *tileNode = searchByIndex(row->data, j);
+                    if (tileNode == NULL) {
+                        fprintf(stderr, "Missing tile at (%d, %d)\n", i, j);
+                        exit(EXIT_FAILURE);
+                    }
+
+                    MazeTile *correspondingTile = tileNode->data;
+                    switch (correspondingTile->data) {
+                        case (EMPTY):
+                            color = WHITE;
+                            break;
+                        case (WALL):
+                            color = GRAY;
+                            break;
+                    }
+
                     DrawRectangle(halfXPadding + i * TILE_DIMENSIONS, 
                                   halfYPadding + j * TILE_DIMENSIONS, 
                                   TILE_DIMENSIONS, 
                                   TILE_DIMENSIONS, 
-                                  WHITE);
+                                  color);
                 }
             }
  

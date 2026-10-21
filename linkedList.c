@@ -110,14 +110,15 @@ Node *searchByIndex(Node *head, int index) {
 
     Node *iterateElement = head;
 
-    while (iterateElement->index != index) {
-        iterateElement = iterateElement->nextNode;
-        if (isTail(iterateElement)) {
-            return NULL;
-        }
+    while (iterateElement != NULL) {
+        if (iterateElement->index == index) {
+            return iterateElement;
+        } 
+        
+        iterateElement = iterateElement->nextNode; 
     }
 
-    return iterateElement;
+    return NULL;
 }
 
 Node *initSingleNode(NodeConfig *config) {
