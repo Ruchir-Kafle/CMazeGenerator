@@ -92,7 +92,8 @@ Node *generateMazeTemplate() {
             // last, in which case it should be a wall
             // or, for recursiveBacktracking, if the node is at an even row and column, it should be a wall
             // this creates a grid where every other block is a wall
-            if (shouldBeWall || isTail(columnNode) || isHead(columnNode) || (rowNode->index % 2 == 0 || columnNode->index % 2 == 0)) {
+            if (shouldBeWall || isTail(columnNode) || isHead(columnNode) 
+                || (rowNode->index % 2 == 0 || columnNode->index % 2 == 0)) {
                 tile->data = WALL;
             } else {
                 tile->data = EMPTY;
@@ -150,7 +151,8 @@ void generatePaths(Node *mazeHead, MazeConfig *config) {
     // if maze_entrance_tile was provided, set that tile to entrance; else
     // mid-tile is entrance
     if (maze_entrance_tile != -1) {
-    } else {
+    } else {                 
+  			
         // approximately in the middle, for odd sized mazes, take half then
         // round down
     }
@@ -173,7 +175,7 @@ void recursiveBacktracking(Node *mazeHead) {
     //      Backtrack until you can visit a new cell, and when you return to start through backtracking, finish.
     
     // ensure user input validity
-    if (mazeHead == NULL) {
+    if (mazeHead == NULL) {                                                                                                                                                                                                                                                                                                                                                            
         fprintf(stderr, "Invalid maze head provided");
         exit(EXIT_FAILURE);
     }
@@ -181,7 +183,39 @@ void recursiveBacktracking(Node *mazeHead) {
     // pick random tile to begin
     Node *randomTileRow = searchByIndex(mazeHead, GetRandomValue(0, MAZE_ROWS-1));
     Node *randomTile = searchByIndex(randomTileRow->data, GetRandomValue(0, MAZE_COLUMNS-1));
+    MazeTile *randomMazeTile = randomTile->data; 
+   
+    // memory
+    LinkedListConfig visitedConfig = {.size = 2};
+    Node *visitedNodes = initDoublyLinkedList(&visitedConfig);
+
+    int dx = 0, dy = 0;
+    // instantiating the choices array with nothing
+    // choices are left, right, up, down; each is x, y
+    int choices[4][2] = {{0,0}, {0,0}, {0,0}, {0,0}};
+
+    if (randomMazeTile->left != NULL) {
+        choices[0][0] = -1;
+    }
+    if (randomMazeTile->right != NULL) {
+        choices[1][0] = 1;
+    }
+    if (randomMazeTile->up != NULL) {
+        choices[2][1] = 1;
+    }
+    if (randomMazeTile->down != NULL) {
+        choices[3][1] = -1;
+    }
+
+    // choosing which adjacent tile in the choices array we should go to
+    while (dx + dy != 1) {
+        int choose = GetRandomValue(0, 3);
+        dx = choices[choose][0];
+        dy = choices[choose][1];
+    }
+
 }
+
 
 void printMaze(Node *head) {
     // printing the maze requires the head of the linked list, otherwise adds

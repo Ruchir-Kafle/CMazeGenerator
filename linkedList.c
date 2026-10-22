@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <time.h>
 
 #include "linkedList.h"
 
@@ -152,6 +153,24 @@ Node *initSingleNode(NodeConfig *config) {
     return newNode;
 }
 
+void attachNodeToEnd(Node *head, Node *element) {
+    if (element == NULL || head == NULL) {
+        fprintf(stderr, "No element or head provided in attachNodeToEnd");
+        exit(EXIT_FAILURE);
+    }
+
+    // find the tail of the linked list to add on to
+    Node *tail = findTail(head);
+
+    // when we have found the tail, we set that node to have a nextNode
+    // and our new node to have a previousNode, meaning it is no longer
+    // the tail
+    element->previousNode = tail;
+    element->nextNode = NULL;
+    element->index = tail->index+1;
+    tail->nextNode = element;
+}
+
 Node *initDoublyLinkedList(LinkedListConfig *config) {
     int size;
 
@@ -174,24 +193,16 @@ Node *initDoublyLinkedList(LinkedListConfig *config) {
     // create a new node for each node wished for
     for (int i = 0; i < size; i++) {
         Node *element = initSingleNode(NULL);
-        element->index = i;
 
         // if first iteration, set node to head, which always has previousNode
         // to NULL
         if (i == 0) {
+            element->index = 0;
             head = element;
             head->previousNode = NULL;
             head->nextNode = NULL;
         } else {
-            // find the tail of the linked list to add on to
-            Node *tail = findTail(head);
-
-            // when we have found the tail, we set that node to have a nextNode
-            // and our new node to have a previousNode, meaning it is no longer
-            // the tail
-            element->previousNode = tail;
-            element->nextNode = NULL;
-            tail->nextNode = element;
+            attachNodeToEnd(head, element);
         }
     }
 
