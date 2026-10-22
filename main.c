@@ -96,7 +96,7 @@ Node *generateMazeTemplate() {
                 || (rowNode->index % 2 == 0 || columnNode->index % 2 == 0)) {
                 tile->data = WALL;
             } else {
-                tile->data = EMPTY;
+                tile->data = UNVISITED;
             }
 
             // set the inner list's data to be a MazeTile
@@ -162,6 +162,22 @@ void generatePaths(Node *mazeHead, MazeConfig *config) {
     }
 }
 
+void attachChoices(Node *choices, MazeTile *addition, Node *correspondingWalls, MazeTile *wall) {
+    if (choices->data == NULL) {
+        choices->data = addition;
+        correspondingWalls->data = wall;
+    } else {
+        NodeConfig data = {.data = addition};
+        Node *element = initSingleNode(&data);
+        appendNode(choices, element);
+
+        NodeConfig wallData = {.data = wall};
+        Node *wallElement = initSingleNode(&wallData);
+        appendNode(correspondingWalls, wallElement); 
+
+    }
+}
+
 void recursiveBacktracking(Node *mazeHead) {
     // perfect maze generation algorithm
     // simple explanation:
@@ -180,9 +196,9 @@ void recursiveBacktracking(Node *mazeHead) {
         exit(EXIT_FAILURE);
     }
 
-    // pick random tile to begin
-    int randomRow = GetRandomValue(0, MAZE_ROWS-1);
-    int randomCol = GetRandomValue(0, MAZE_COLUMNS-1);
+    // pick random EMPTY tile to begin
+    int randomRow = GetRandomValue(1, MAZE_ROWS/2)*2 - 1;
+    int randomCol = GetRandomValue(1, MAZE_COLUMNS/2)*2 - 1;
     
     Node *randomTileRow = searchByIndex(mazeHead, randomRow);
     Node *randomTile = searchByIndex(randomTileRow->data, randomCol);
@@ -190,39 +206,63 @@ void recursiveBacktracking(Node *mazeHead) {
    
     // memory
     LinkedListConfig visitedConfig = {.size = 1};
-    LinkedListConfig nestedArrayConfig = {.size = 2};
     Node *visitedNodes = initDoublyLinkedList(&visitedConfig);
-    visitedNodes->data = initDoublyLinkedList(&nestedArrayConfig);
+    // setting memory to the first node, randomMazeTile
+    visitedNodes->data = randomMazeTile; 
 
-    // setting the memory to the row and column which the maze tile is in
-    Node *nestedNode = visitedNodes->data;
-    nestedNode->data = &randomRow;
-    nestedNode->nextNode->data = &randomCol;
+    while (true) {
+        // current is just the last node to be stored in memory
+        MazeTile *current = (MazeTile *)findTail(visitedNodes)->data;
+        
+        // choices
+        LinkedListConfig choicesConfig = {.size = 1};
+        Node *choices = initDoublyLinkedList(&choicesConfig);
+        LinkedListConfig correspondingWallConfig = {.size = 1};
+        Node *correspondingWalls = initDoublyLinkedList(&correspondingWallConfig);
 
-    int dx = 0, dy = 0;
-    // instantiating the choices array with nothing
-    // choices are left, right, up, down; each is x, y
-    int choices[4][2] = {{0,0}, {0,0}, {0,0}, {0,0}};
+        // TODO: need to free these pointers at end ^^^
 
-    if (randomMazeTile->left != NULL) {
-        choices[0][0] = -1;
-    }
-    if (randomMazeTile->right != NULL) {
-        choices[1][0] = 1;
-    }
-    if (randomMazeTile->up != NULL) {
-        choices[2][1] = 1;
-    }
-    if (randomMazeTile->down != NULL) {
-        choices[3][1] = -1;
+        if (current->left->left != NULL && current->left->left->data == UNVISITED) {
+            attachChoices(choices, current->left->left, correspondingWalls, current->left);
+        }
+        if (current->right->right != NULL && current->right->right->data == UNVISITED) {
+            attachChoices(choices, current->right->right, correspondingWalls, current->right);
+        }
+        if (current->up->up != NULL && current->up->up->data == UNVISITED) {
+            attachChoices(choices, current->up->up, correspondingWalls, current->up);
+        }
+        if (current->down->down != NULL && current->down->down->data == UNVISITED) {
+            attachChoices(choices, current->down->down, correspondingWalls, current->down);
+        }
+
+        // if no remaining choices, backtrack by going back to the last node
+        if (choices->data == NULL) {
+            // if there are no choices and we are at the last remembered node, aka the start, end
+            if (findTail(visitedNodes)->index == 0) {
+                return;
+            }
+
+            popLastNode(visitedNodes);
+        } else {
+            // if choices, find the last node's index and get a random node from the list using that number
+            // to generate an index that must be within the list and searching for it.
+            int lastIndex = findTail(choices)->index;
+            Node *randomNode = searchByIndex(choices, GetRandomValue(0, lastIndex));
+            MazeTile *randomTile = randomNode->data;
+            randomTile->data = EMPTY;
+            
+            Node *correspondingWallNode = searchByIndex(correspondingWalls, randomNode->index);
+            MazeTile *middleWall = correspondingWallNode->data;
+            middleWall->data = EMPTY;
+        
+            // then go to the next node by appending the node
+            NodeConfig data = {.data = randomTile};
+            Node *element = initSingleNode(&data);
+            appendNode(visitedNodes, element);         
+        }
     }
 
-    // choosing which adjacent tile in the choices array we should go to
-    while (dx + dy != 1) {
-        int choose = GetRandomValue(0, 3);
-        dx = choices[choose][0];
-        dy = choices[choose][1];
-    }
+
 
 }
 
@@ -275,6 +315,9 @@ void raylib_main(Node *mazeHead) {
                     Node *tileNode = searchByIndex(row->data, j);
                     MazeTile *correspondingTile = tileNode->data;
                     switch (correspondingTile->data) {
+                        case (UNVISITED):
+                            color = BLUE;
+                            break;
                         case (EMPTY):
                             color = WHITE;
                             break;
@@ -307,6 +350,8 @@ int main() {
     linkMazeTiles(maze);
 
     printMaze(maze);
+
+    recursiveBacktracking(maze);
 
     raylib_main(maze);
 

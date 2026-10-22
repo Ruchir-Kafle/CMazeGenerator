@@ -28,7 +28,7 @@ bool isTail(Node *element);
 Node *findHead(Node *element);
 Node *findTail(Node *element);
 Node *initSingleNode(NodeConfig *config);
-void attachNodeToEnd(Node *head, Node *element);
+void appendNode(Node *head, Node *element);
 void popLastNode(Node *head);
 Node *initDoublyLinkedList(LinkedListConfig *config);
 Node *correspondingElementInPreviousRow(Node *parent, Node *element);

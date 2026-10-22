@@ -153,9 +153,9 @@ Node *initSingleNode(NodeConfig *config) {
     return newNode;
 }
 
-void attachNodeToEnd(Node *head, Node *element) {
+void appendNode(Node *head, Node *element) {
     if (element == NULL || head == NULL) {
-        fprintf(stderr, "No element or head provided in attachNodeToEnd");
+        fprintf(stderr, "No element or head provided in appendNode");
         exit(EXIT_FAILURE);
     }
 
@@ -219,7 +219,7 @@ Node *initDoublyLinkedList(LinkedListConfig *config) {
             head->previousNode = NULL;
             head->nextNode = NULL;
         } else {
-            attachNodeToEnd(head, element);
+            appendNode(head, element);
         }
     }
 
