@@ -8,7 +8,8 @@ bool isHead(Node *element) {
     // if the element has a previous node, it can't be the head, so check for
     // that
     if (element == NULL) {
-        return NULL;
+        fprintf(stderr, "No element provided in isHead.");
+        exit(EXIT_FAILURE);
     }
 
     if (element->previousNode == NULL) {
@@ -21,7 +22,8 @@ bool isHead(Node *element) {
 bool isTail(Node *element) {
     // if the element has a next node, it can't be the tail, so check for that
     if (element == NULL) {
-        return NULL;
+        fprintf(stderr, "No element provided in isTail.");
+        exit(EXIT_FAILURE);
     }
 
     if (element->nextNode == NULL) {
@@ -33,7 +35,8 @@ bool isTail(Node *element) {
 
 Node *findHead(Node *element) {
     if (element == NULL) {
-        return NULL;
+        fprintf(stderr, "No element provided in findHead.");
+        exit(EXIT_FAILURE);
     }
     // new iteration var so not to change og argument
     Node *iterateElement = element;
@@ -50,7 +53,8 @@ Node *findHead(Node *element) {
 
 Node *findTail(Node *element) {
     if (element == NULL) {
-        return NULL;
+        fprintf(stderr, "No element provided in findTail.");
+        exit(EXIT_FAILURE);
     }
     // new iteration var so not to change og argument
     Node *iterateElement = element;
@@ -67,8 +71,9 @@ Node *findTail(Node *element) {
 
 Node *correspondingElementInPreviousRow(Node *parent, Node *element) {
     // function to find the linked list element with the same index as the given one, but in the prev row
-    if (element == NULL) {
-        return NULL;
+    if (element == NULL || parent == NULL) {
+        fprintf(stderr, "No element or parent provided in correspondingElementInPreviousRow.");
+        exit(EXIT_FAILURE);
     }
 
     Node *iterateElement = parent->previousNode->data;
@@ -87,7 +92,8 @@ Node *correspondingElementInPreviousRow(Node *parent, Node *element) {
 Node *correspondingElementInNextRow(Node *parent, Node *element) {
     // function to find the linked list element with the same index as the given one, but in the next row
     if (element == NULL) {
-        return NULL;
+        fprintf(stderr, "No element or parent provided in correspondingElementInNextRow.");
+        exit(EXIT_FAILURE);
     }
 
     Node *iterateElement = parent->nextNode->data;
@@ -105,7 +111,8 @@ Node *correspondingElementInNextRow(Node *parent, Node *element) {
 
 Node *searchByIndex(Node *head, int index) {
     if (head == NULL || !isHead(head)) {
-        return NULL;
+        fprintf(stderr, "Element provided is NULL or not a list head in searchByIndex");
+        exit(EXIT_FAILURE);
     }
 
     Node *iterateElement = head;

@@ -11,13 +11,14 @@
 #include "linkedList.h"
 
 // macros
-#define MAZE_ROWS 10
-#define MAZE_COLUMNS 10
+// maze rows and columns should be odd
+#define MAZE_ROWS 81
+#define MAZE_COLUMNS 81
 
-#define HORIZONTAL_PADDING 400
+#define HORIZONTAL_PADDING 200
 #define VERTICAL_PADDING (HORIZONTAL_PADDING / 2)
 
-#define TILE_DIMENSIONS 60
+#define TILE_DIMENSIONS 10
 
 // forward declaration
 typedef struct MazeTile MazeTile;
@@ -32,6 +33,7 @@ struct MazeTile {
 };
 
 typedef enum {
+    UNVISITED,
     EMPTY,
     WALL
 } COLORS;
@@ -88,7 +90,9 @@ Node *generateMazeTemplate() {
             // check if the tile should be a wall and set its value
             // plus check if the current node in the iteration is the first or
             // last, in which case it should be a wall
-            if (shouldBeWall || isTail(columnNode) || isHead(columnNode)) {
+            // or, for recursiveBacktracking, if the node is at an even row and column, it should be a wall
+            // this creates a grid where every other block is a wall
+            if (shouldBeWall || isTail(columnNode) || isHead(columnNode) || (rowNode->index % 2 == 0 || columnNode->index % 2 == 0)) {
                 tile->data = WALL;
             } else {
                 tile->data = EMPTY;
@@ -156,6 +160,29 @@ void generatePaths(Node *mazeHead, MazeConfig *config) {
     }
 }
 
+void recursiveBacktracking(Node *mazeHead) {
+    // perfect maze generation algorithm
+    // simple explanation:
+    //      pick a random place to begin and set its state to visited
+    //      choose an adjacent unvisited cell, which in this case will be two blocks away
+    //      this is necessary in order to allow walls to have space on the board.
+    //      When two cells have been picked, by going from one to the next,
+    //      get rid of the wall in between them so they are merged if it has not yet been visited.
+    //      The next cell should have its state set to visited.
+    //      Continue until there are no more adjacent cells.
+    //      Backtrack until you can visit a new cell, and when you return to start through backtracking, finish.
+    
+    // ensure user input validity
+    if (mazeHead == NULL) {
+        fprintf(stderr, "Invalid maze head provided");
+        exit(EXIT_FAILURE);
+    }
+
+    // pick random tile to begin
+    Node *randomTileRow = searchByIndex(mazeHead, GetRandomValue(0, MAZE_ROWS-1));
+    Node *randomTile = searchByIndex(randomTileRow->data, GetRandomValue(0, MAZE_COLUMNS-1));
+}
+
 void printMaze(Node *head) {
     // printing the maze requires the head of the linked list, otherwise adds
     // more complexity
@@ -201,17 +228,7 @@ void raylib_main(Node *mazeHead) {
                     Color color;
 
                     Node *row = searchByIndex(mazeHead, i);
-                    if (row == NULL) {
-                        fprintf(stderr, "NULL row at (%d, %d)\n", i, j);
-                        exit(EXIT_FAILURE);
-                    }
-
                     Node *tileNode = searchByIndex(row->data, j);
-                    if (tileNode == NULL) {
-                        fprintf(stderr, "Missing tile at (%d, %d)\n", i, j);
-                        exit(EXIT_FAILURE);
-                    }
-
                     MazeTile *correspondingTile = tileNode->data;
                     switch (correspondingTile->data) {
                         case (EMPTY):
