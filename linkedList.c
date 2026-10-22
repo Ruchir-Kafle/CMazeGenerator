@@ -171,6 +171,23 @@ void attachNodeToEnd(Node *head, Node *element) {
     tail->nextNode = element;
 }
 
+void popLastNode(Node *head) {
+    if (head == NULL) {
+        fprintf(stderr, "No head provided in popLastNode");
+        exit(EXIT_FAILURE);
+    }
+
+    Node *tail = findTail(head);
+
+    if (tail->index < 2) {
+        fprintf(stderr, "Linked list provided is too small to pop a node from in popLastNode");
+        exit(EXIT_FAILURE);
+    }
+
+    tail->previousNode->nextNode = NULL;
+    free(tail);
+}
+
 Node *initDoublyLinkedList(LinkedListConfig *config) {
     int size;
 
@@ -183,8 +200,8 @@ Node *initDoublyLinkedList(LinkedListConfig *config) {
 
     // if no size was provided/too small, set to default 2, as 2 is the minimum
     // size
-    if (size <= 1) {
-        size = 2;
+    if (size < 1) {
+        size = 1;
     }
 
     // head node for when created as a start point for linked list

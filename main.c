@@ -181,13 +181,23 @@ void recursiveBacktracking(Node *mazeHead) {
     }
 
     // pick random tile to begin
-    Node *randomTileRow = searchByIndex(mazeHead, GetRandomValue(0, MAZE_ROWS-1));
-    Node *randomTile = searchByIndex(randomTileRow->data, GetRandomValue(0, MAZE_COLUMNS-1));
+    int randomRow = GetRandomValue(0, MAZE_ROWS-1);
+    int randomCol = GetRandomValue(0, MAZE_COLUMNS-1);
+    
+    Node *randomTileRow = searchByIndex(mazeHead, randomRow);
+    Node *randomTile = searchByIndex(randomTileRow->data, randomCol);
     MazeTile *randomMazeTile = randomTile->data; 
    
     // memory
-    LinkedListConfig visitedConfig = {.size = 2};
+    LinkedListConfig visitedConfig = {.size = 1};
+    LinkedListConfig nestedArrayConfig = {.size = 2};
     Node *visitedNodes = initDoublyLinkedList(&visitedConfig);
+    visitedNodes->data = initDoublyLinkedList(&nestedArrayConfig);
+
+    // setting the memory to the row and column which the maze tile is in
+    Node *nestedNode = visitedNodes->data;
+    nestedNode->data = &randomRow;
+    nestedNode->nextNode->data = &randomCol;
 
     int dx = 0, dy = 0;
     // instantiating the choices array with nothing
