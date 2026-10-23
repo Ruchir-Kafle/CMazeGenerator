@@ -349,9 +349,8 @@ int main() {
     Node *maze = generateMazeTemplate();
     linkMazeTiles(maze);
 
-    printMaze(maze);
-
     recursiveBacktracking(maze);
+    printMaze(maze);
 
     raylib_main(maze);
 

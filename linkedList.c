@@ -9,7 +9,7 @@ bool isHead(Node *element) {
     // if the element has a previous node, it can't be the head, so check for
     // that
     if (element == NULL) {
-        fprintf(stderr, "No element provided in isHead.");
+        fprintf(stderr, "No element provided in isHead.\n");
         exit(EXIT_FAILURE);
     }
 
@@ -23,7 +23,7 @@ bool isHead(Node *element) {
 bool isTail(Node *element) {
     // if the element has a next node, it can't be the tail, so check for that
     if (element == NULL) {
-        fprintf(stderr, "No element provided in isTail.");
+        fprintf(stderr, "No element provided in isTail.\n");
         exit(EXIT_FAILURE);
     }
 
@@ -36,7 +36,7 @@ bool isTail(Node *element) {
 
 Node *findHead(Node *element) {
     if (element == NULL) {
-        fprintf(stderr, "No element provided in findHead.");
+        fprintf(stderr, "No element provided in findHead.\n");
         exit(EXIT_FAILURE);
     }
     // new iteration var so not to change og argument
@@ -54,7 +54,7 @@ Node *findHead(Node *element) {
 
 Node *findTail(Node *element) {
     if (element == NULL) {
-        fprintf(stderr, "No element provided in findTail.");
+        fprintf(stderr, "No element provided in findTail.\n");
         exit(EXIT_FAILURE);
     }
     // new iteration var so not to change og argument
@@ -73,7 +73,7 @@ Node *findTail(Node *element) {
 Node *correspondingElementInPreviousRow(Node *parent, Node *element) {
     // function to find the linked list element with the same index as the given one, but in the prev row
     if (element == NULL || parent == NULL) {
-        fprintf(stderr, "No element or parent provided in correspondingElementInPreviousRow.");
+        fprintf(stderr, "No element or parent provided in correspondingElementInPreviousRow.\n");
         exit(EXIT_FAILURE);
     }
 
@@ -93,7 +93,7 @@ Node *correspondingElementInPreviousRow(Node *parent, Node *element) {
 Node *correspondingElementInNextRow(Node *parent, Node *element) {
     // function to find the linked list element with the same index as the given one, but in the next row
     if (element == NULL) {
-        fprintf(stderr, "No element or parent provided in correspondingElementInNextRow.");
+        fprintf(stderr, "No element or parent provided in correspondingElementInNextRow.\n");
         exit(EXIT_FAILURE);
     }
 
@@ -112,7 +112,7 @@ Node *correspondingElementInNextRow(Node *parent, Node *element) {
 
 Node *searchByIndex(Node *head, int index) {
     if (head == NULL || !isHead(head)) {
-        fprintf(stderr, "Element provided is NULL or not a list head in searchByIndex");
+        fprintf(stderr, "Element provided is NULL or not a list head in searchByIndex\n");
         exit(EXIT_FAILURE);
     }
 
@@ -155,7 +155,7 @@ Node *initSingleNode(NodeConfig *config) {
 
 void appendNode(Node *head, Node *element) {
     if (element == NULL || head == NULL) {
-        fprintf(stderr, "No element or head provided in appendNode");
+        fprintf(stderr, "No element or head provided in appendNode\n");
         exit(EXIT_FAILURE);
     }
 
@@ -173,14 +173,14 @@ void appendNode(Node *head, Node *element) {
 
 void popLastNode(Node *head) {
     if (head == NULL) {
-        fprintf(stderr, "No head provided in popLastNode");
+        fprintf(stderr, "No head provided in popLastNode\n");
         exit(EXIT_FAILURE);
     }
 
     Node *tail = findTail(head);
 
-    if (tail->index < 2) {
-        fprintf(stderr, "Linked list provided is too small to pop a node from in popLastNode");
+    if (tail->index < 1) {
+        fprintf(stderr, "Linked list provided is too small to pop a node from in popLastNode\n");
         exit(EXIT_FAILURE);
     }
 
