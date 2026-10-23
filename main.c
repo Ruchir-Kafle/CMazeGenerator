@@ -12,13 +12,16 @@
 
 // macros
 // maze rows and columns should be odd
-#define MAZE_ROWS 81
-#define MAZE_COLUMNS 81
+#define MAZE_ROWS 11
+#define MAZE_COLUMNS 11
+
+// just the grid max horizontal / vertical, so this excludes padding which is added after
+#define MAX_GRID_SIZE 800
+
+#define TILE_DIMENSIONS (MAX_GRID_SIZE / MAZE_ROWS)
 
 #define HORIZONTAL_PADDING 200
 #define VERTICAL_PADDING (HORIZONTAL_PADDING / 2)
-
-#define TILE_DIMENSIONS 10
 
 // forward declaration
 typedef struct MazeTile MazeTile;
@@ -294,7 +297,7 @@ void printMaze(Node *head) {
 void raylib_main(Node *mazeHead) {
 
     // initialize window
-    InitWindow(MAZE_COLUMNS * TILE_DIMENSIONS + HORIZONTAL_PADDING, MAZE_ROWS * TILE_DIMENSIONS + VERTICAL_PADDING, "Maze");
+    InitWindow(MAX_GRID_SIZE + HORIZONTAL_PADDING, MAX_GRID_SIZE + VERTICAL_PADDING, "Maze");
 
     // main game loop
     while (!WindowShouldClose()) {
