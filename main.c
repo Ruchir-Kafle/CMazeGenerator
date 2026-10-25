@@ -12,8 +12,8 @@
 
 // macros
 // maze rows and columns should be odd
-#define MAZE_ROWS 81
-#define MAZE_COLUMNS 81
+#define MAZE_ROWS 21
+#define MAZE_COLUMNS 21
 
 // just the grid max horizontal / vertical, so this excludes padding which is added after
 #define MAX_GRID_SIZE 800
@@ -273,9 +273,22 @@ void recursiveBacktracking(Node *mazeHead) {
             appendNode(visitedNodes, element);         
         }
     }
+}
 
+Vector2 *mouseHovering(Node *mazeHead) {
+    Vector2 mouse = GetMousePosition();
 
+    int tileX = (mouse.x - HORIZONTAL_PADDING / 2) / TILE_DIMENSIONS;
+    int tileY = (mouse.y - VERTICAL_PADDING / 2) / TILE_DIMENSIONS;
 
+    if (tileX < 0 || tileX >= MAZE_ROWS || tileY < 0 || tileY >= MAZE_COLUMNS) {
+        return NULL;
+    }
+
+    Vector2 *tile = malloc(sizeof(Vector2));
+    tile->x = tileX;
+    tile->y = tileY;
+    return tile;
 }
 
 
@@ -310,6 +323,7 @@ void raylib_main(Node *mazeHead) {
 
     // main game loop
     while (!WindowShouldClose()) {
+
         // begin loop, start drawing
         BeginDrawing();
 
@@ -344,6 +358,11 @@ void raylib_main(Node *mazeHead) {
                             break;
                     }
 
+                    Vector2 *hoveringTile = mouseHovering(mazeHead);
+                    if (hoveringTile != NULL && i == hoveringTile->x && j == hoveringTile->y) {
+                        color = BLACK; 
+                    }
+
                     DrawRectangle(halfXPadding + i * TILE_DIMENSIONS, 
                                   halfYPadding + j * TILE_DIMENSIONS, 
                                   TILE_DIMENSIONS, 
@@ -364,6 +383,11 @@ void raylib_main(Node *mazeHead) {
 
 // temp main for deb;ugging maze logic
 int main() {
+    if (MAZE_ROWS < 11 || MAZE_ROWS % 2 == 0 || MAZE_COLUMNS < 11 || MAZE_COLUMNS % 2 == 0) {
+        fprintf(stderr, "MAZE_ROWS or MAZE_COLUMNS is less than 11 or even.");
+        exit(EXIT_FAILURE);
+    }
+
     Node *maze = generateMazeTemplate();
     linkMazeTiles(maze);
 
