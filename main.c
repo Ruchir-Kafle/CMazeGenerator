@@ -38,7 +38,9 @@ struct MazeTile {
 typedef enum {
     UNVISITED,
     EMPTY,
-    WALL
+    WALL,
+    ENTRANCE,
+    EXIT
 } COLORS;
 
 // config structs
@@ -154,14 +156,21 @@ void generatePaths(Node *mazeHead, MazeConfig *config) {
     // if maze_entrance_tile was provided, set that tile to entrance; else
     // mid-tile is entrance
     if (maze_entrance_tile != -1) {
+        MazeTile *entranceTile = searchByIndex(mazeHead->data, maze_entrance_tile)->data;
+        entranceTile->data = ENTRANCE;
     } else {                 
-  			
         // approximately in the middle, for odd sized mazes, take half then
         // round down
+        MazeTile *entranceTile = searchByIndex(mazeHead->data, MAZE_COLUMNS / 2)->data;
+        entranceTile->data = ENTRANCE;
     }
     // same for maze_exit_tile as maze_entrance_tile
     if (maze_exit_tile != -1) {
+        MazeTile *exitTile = searchByIndex(findTail(mazeHead)->data, maze_entrance_tile)->data;
+        exitTile->data = EXIT;
     } else {
+        MazeTile *exitTile = searchByIndex(findTail(mazeHead)->data, MAZE_COLUMNS / 2)->data;
+        exitTile->data = EXIT;
     }
 }
 
@@ -327,6 +336,12 @@ void raylib_main(Node *mazeHead) {
                         case (WALL):
                             color = GRAY;
                             break;
+                        case (ENTRANCE):
+                            color = GREEN;
+                            break;
+                        case (EXIT):
+                            color = RED;
+                            break;
                     }
 
                     DrawRectangle(halfXPadding + i * TILE_DIMENSIONS, 
@@ -352,6 +367,8 @@ int main() {
     Node *maze = generateMazeTemplate();
     linkMazeTiles(maze);
 
+    MazeConfig config = {.maze_entrance = -1, .maze_exit = -1};
+    generatePaths(maze, &config);
     recursiveBacktracking(maze);
     printMaze(maze);
 
