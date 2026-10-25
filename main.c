@@ -12,8 +12,8 @@
 
 // macros
 // maze rows and columns should be odd
-#define MAZE_ROWS 11
-#define MAZE_COLUMNS 11
+#define MAZE_ROWS 81
+#define MAZE_COLUMNS 81
 
 // just the grid max horizontal / vertical, so this excludes padding which is added after
 #define MAX_GRID_SIZE 800
